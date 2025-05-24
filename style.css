@@ -1,0 +1,250 @@
+body {
+    font-family: Segoe UI Variable, Segoe UI;
+    overflow: hidden;
+    height: 100vh;
+}
+
+
+.invisible {
+    visibility: hidden;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.visible {
+    visibility: visible;
+    position: relative;
+    z-index: 1;
+}
+
+.StartScreen {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #fff;
+    color: #000;
+}
+
+.StartScreen .sc-1 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.StartScreen .sc-2 {
+    font-size: 24px;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.StartScreen button {
+    width: 500px;
+    height: 50px;
+    border-radius: 25px;
+    margin: 100px auto;
+}
+
+.StartScreen button:hover {
+    color: #fff;
+    background-color: #000;
+    cursor: pointer;
+}
+
+.SelectScreen {
+    display: flex;
+    height: 100vh;
+}
+
+.SelectScreen .selection {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.sidebar {
+    width: 10%;
+    padding: 0 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+}
+
+.sidebar>div {
+    margin-bottom: 30px;
+}
+
+.main:hover,
+.settings:hover,
+.previous:hover {
+    cursor: pointer;
+}
+
+.SelectScreen .selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.SelectScreen .selection button {
+    width: 600px;
+    height: 100px;
+    border-radius: 25px;
+    margin: 20px;
+}
+
+.SelectScreen .selection button:hover {
+    color: #fff;
+    background-color: #000;
+    cursor: pointer;
+}
+
+.TempOptions {
+    display: flex;
+    height: 100vh;
+}
+
+.TempOptions .ts-wrap {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 15%;
+}
+
+.TempOptions .ts-wrap .ts-1 div {
+    padding-left: 100px;
+}
+
+.TempOptions .ts-wrap .ts-2 div {
+    padding-left: 100px;
+}
+
+input[type=checkbox],
+label:hover {
+    cursor: pointer;
+}
+
+.CacheOptions {
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.CacheOptions .co-wrap {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 10%;
+}
+
+.CacheOptions .co-wrap .co-1 {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    font-size: 20px;
+}
+
+.CacheOptions .co-wrap .co-1 div {
+    margin-top: 30px;
+}
+
+.execute {
+    margin-top: 100px;
+    width: 400px;
+    height: 100px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #000;
+}
+
+.execute:hover {
+    color: #fff;
+    background-color: #000;
+    cursor: pointer;
+}
+
+.ReserveOptions {
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+}
+
+.ReserveOptions .ro-wrap {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.ReserveOptions .ro-wrap .time div {
+    margin: 0 10px;
+}
+
+.ReserveOptions .ro-wrap .items>div {
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.Done {
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.Done .d-wrap {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.Done .d-wrap .d2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.Settings {
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+}
+
+.Settings .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    font-size: 26px;
+    font-weight: 400;
+}

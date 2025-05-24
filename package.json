@@ -1,0 +1,29 @@
+{
+  "name": "main",
+  "version": "0.1.0",
+  "description": "PC Optimization Helper for Windows.",
+  "license": "ISC",
+  "author": "Andrew",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.pccleaner.alpha",
+    "productName": "PC Optimization Helper",
+    "win": {
+      "target": "nsis",
+      "requestedExecutionLevel": "requireAdministrator",
+      "icon": "img/exeicon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "electron-progressbar": "^2.2.1"
+  }
+}

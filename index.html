@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC 최적화 도우미</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Start Screen -->
+    <div class="StartScreen visible">
+        <div class="sc-1">PC 최적화 도우미</div>
+        <div class="sc-2">Windows를 위한 PC 클리너</div>
+        <button onclick="changeWindow(StartScreen, SelectScreen)">시작하기</button>
+    </div>
+
+
+    <!-- Select Screen -->
+    <div class="SelectScreen invisible">
+        <div class="selection">
+            <button class="cache" onclick="changeWindow(SelectScreen, CacheOptions)">인터넷 캐시 정리</button>
+            <button class="temp" onclick="changeWindow(SelectScreen, TempOptions)">임시 파일 정리</button>
+            <button class="reserve" onclick="changeWindow(SelectScreen, ReserveOptions)">정리 예약하기</button>
+        </div>
+        <div class="sidebar">
+            <div class="main">
+                <img src="./img/home.png" alt="Main" width="90" height="90">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings">
+                <img src="./img/settings.png" alt="Settings" width="90" height="90"
+                    onclick="changeWindow(SelectScreen, Settings)">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" width="90" height="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Temp File Options -->
+    <div class="TempOptions invisible">
+        <div class="ts-wrap">
+            <div class="ts-1">
+                임시 파일 정리하기
+                <div>
+                    <input type="checkbox" name="option" id="current">
+                    <label for="current">현재 사용자의 임시 파일만 정리하기</label><br>
+                    <input type="checkbox" name="option" id="all">
+                    <label for="all">모든 임시 파일 정리하기</label>
+                </div>
+            </div>
+            <div class="ts-2">삭제 기준
+                <div>생성된 시간:
+                    <select name="TmpSelect" id="tmpold">
+                        <option value="1h">1시간 전</option>
+                        <option value="6h">6시간 전</option>
+                        <option value="12h">12시간 전</option>
+                        <option value="1d">1일 전</option>
+                        <option value="2d">2일 전</option>
+                        <option value="3d">3일 전</option>
+                        <option value="7d">7일 전</option>
+                        <option value="1m">1달 전</option>
+                        <option value="6m">6달 전</option>
+                        <option value="all">모든 시간</option>
+                    </select>
+                </div>
+            </div>
+            <button class="execute" onclick="changeWindow(TempOptions, InProgress)">정리하기</button>
+        </div>
+        <div class="sidebar">
+            <div class="main">
+                <img src="./img/home.png" alt="Main" height="90" width="90"
+                    onclick="changeWindow(TempOptions, SelectScreen)">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90"
+                    onclick="changeWindow(TempOptions, Settings)">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Cache Options -->
+    <div class="CacheOptions invisible">
+        <div class="co-wrap">
+            정리할 브라우저 선택
+            <div class="co-1">
+                <div>
+                    <input type="checkbox" name="SelectBrowser" id="Browser1">
+                    <label for="Browser1">Edge</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="SelectBrowser" id="Browser2">
+                    <label for="Browser2">Chrome</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="SelectBrowser" id="Browser3">
+                    <label for="Browser3">Firefox</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="SelectBrowser" id="Browser4">
+                    <label for="Browser4">Whale</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="SelectBrowser" id="Browser5">
+                    <label for="Browser5">Opera</label>
+                </div>
+            </div>
+            <button class="execute" onclick="changeWindow(CacheOptions, InProgress)">정리하기</button>
+        </div>
+
+        <div class="sidebar">
+            <div class="main" onclick="changeWindow(CacheOptions, SelectScreen)">
+                <img src="./img/home.png" alt="Main" height="90" width="90">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings" onclick="changeWindow(CacheOptions, Settings)">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Reserve Options -->
+    <div class="ReserveOptions invisible">
+        <div class="ro-wrap">
+            <div class="time">
+                <div>시간 선택</div>
+                <div>
+                    <input type="date" name="ReserveDate" id="ReserveDate">
+                    <input type="time" name="ReserveTime" id="ReserveTime">
+                </div>
+            </div>
+            <div class="items">
+                최적화 항목
+                <div>
+                    <div>
+                        <input type="checkbox" name="SelectItem" id="che">
+                        <label for="che">인터넷 캐시</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="SelectItem" id="tmp">
+                        <label for="tmp">임시 파일</label>
+                    </div>
+                </div>
+            </div>
+            <button class="execute" onclick="changeWindow(ReserveOptions, InProgress)">예약하기</button>
+        </div>
+        <div class="sidebar">
+            <div class="main" onclick="changeWindow(ReserveOptions, SelectScreen)">
+                <img src="./img/home.png" alt="Main" height="90" width="90">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings" onclick="changeWindow(ReserveOptions, Settings)">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- In Progress -->
+    <div class="Progressing invisible">
+        <button class="execute" onclick="changeWindow(InProgress, Finished)">임시 버튼: 스킵하기</button>
+    </div>
+
+    <!-- Finished -->
+    <div class="Done invisible">
+        <div class="d-wrap">
+            <div class="d-1">
+                <img src="./img/done.png" alt="Done" height="100" width="100">
+                <div>최적화 완료!</div>
+                <div>걸린 시간: </div>
+            </div>
+            <br>
+            <div class="d-2">
+                <div>
+                    <input type="checkbox" name="Whatnext" id="gomain">
+                    <label for="gomain">메인 화면으로 돌아가기</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="Whatnext" id="exit">
+                    <label for="exit">종료하기</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="Whatnext" id="reboot">
+                    <label for="reboot">재부팅하기</label>
+                </div>
+            </div>
+            <button class="execute" onclick="exit()">마치기</button>
+        </div>
+
+        <div class="sidebar">
+            <div class="main">
+                <img src="./img/home.png" alt="Main" height="90" width="90" onclick="changeWindow(Finished, SelectScreen)">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90" onclick="changeWindow(Finished, Settings)">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="Settings invisible">
+        <div class="wrap">
+            <div class="language">
+                언어 선택
+                <div>
+                    <input type="checkbox" name="language" id="korean" checked>
+                    <label for="korean">한국어</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="language" id="english">
+                    <label for="english">영어</label>
+                </div>
+            </div><br>
+            <div class="environment">
+                환경 설정
+                <div>
+                    <input type="checkbox" name="environment" id="start">
+                    <label for="start">컴퓨터와 함께 시작하기</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="environment" id="restart">
+                    <label for="restart">최적화가 끝난 후 항상 재부팅하기</label>
+                </div><br>
+                <div>현재 버전: 0.1.0</div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="main">
+                <img src="./img/home.png" alt="Main" height="90" width="90"
+                    onclick="changeWindow(Settings, SelectScreen)">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./renderer.js"></script>
+</body>
+
+</html>
