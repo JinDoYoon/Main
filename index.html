@@ -92,31 +92,10 @@
 
     <!-- Cache Options -->
     <div class="CacheOptions invisible">
-        <div class="co-wrap">
-            정리할 브라우저 선택
-            <div class="co-1">
-                <div>
-                    <input type="checkbox" name="SelectBrowser" id="Browser1">
-                    <label for="Browser1">Edge</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="SelectBrowser" id="Browser2">
-                    <label for="Browser2">Chrome</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="SelectBrowser" id="Browser3">
-                    <label for="Browser3">Firefox</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="SelectBrowser" id="Browser4">
-                    <label for="Browser4">Whale</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="SelectBrowser" id="Browser5">
-                    <label for="Browser5">Opera</label>
-                </div>
-            </div>
-            <button class="execute" onclick="changeWindow(CacheOptions, InProgress)">정리하기</button>
+        <div>
+            <h2>Browser Cache</h2>
+            <div class="BrowserOptions"></div>
+            <button onclick="cleanBrowserCaches()">Clean</button>
         </div>
 
         <div class="sidebar">

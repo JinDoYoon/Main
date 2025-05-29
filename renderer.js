@@ -48,3 +48,40 @@ function cleantemp() {
         changeWindow(InProgress, Finished);
     });
 }
+
+window.fileAPI.detectBrowsers().then(detected => {
+    const container = document.querySelector('.BrowserOptions');
+    container.innerHTML = '';
+
+    for (const browser of Object.keys(detected)) {
+        const label = document.createElement('label');
+        label.style.display = 'block';
+        label.innerHTML = `
+            <input type="checkbox" id="${browser}"> ${browser[0].toUpperCase() + browser.slice(1)}
+        `;
+        container.appendChild(label);
+    }
+});
+
+function cleanBrowserCaches() {
+    const supported = ['chrome', 'edge', 'brave', 'firefox'];
+    const selected = supported.filter(id => {
+        const checkbox = document.getElementById(id);
+        return checkbox?.checked;
+    });
+
+    if (selected.length === 0) {
+        alert('At least one browser must be selected!');
+        return;
+    }
+
+    changeWindow(CacheOptions, InProgress);
+    document.getElementById('progress-bar').classList.add('indeterminate');
+
+    window.fileAPI.cleanBrowserCache(selected);
+
+    window.fileAPI.onBrowserDone(() => {
+        document.getElementById('progress-bar').classList.remove('indeterminate');
+        changeWindow(InProgress, Finished);
+    });
+}
