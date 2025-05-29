@@ -1,6 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const sudo = require('sudo-prompt');
 const { exec } = require('child_process');
 const fs = require('fs');
 
@@ -15,11 +14,12 @@ function createWindow() {
         }
     });
     win.loadFile('index.html');
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
 
-ipcMain.on('clean-temps', (event, { winTemp, userTemp, userTempPath }) => {
+ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
     const win = BrowserWindow.getAllWindows()[0];
     win.setProgressBar(2); // indeterminate
 
@@ -32,15 +32,16 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp, userTempPath }) => {
     const total = [winTemp, userTemp].filter(Boolean).length;
 
     if (winTemp) {
-        const cmd = `cmd.exe /c del C:\\Windows\\Temp\\*.* /s /q`;
-        sudo.exec(cmd, { name: 'Electron Cleaner' }, (error) => {
-            if (error) console.error('WinTemp error:', error);
+        const cmd = '';
+
+        exec(cmd, (error) => {
+            if (error) console.log('WinTemp error:', error);
             if (++completed === total) done();
-        });
+        })
     }
 
     if (userTemp) {
-        const cmd = `cmd.exe /c del "${userTempPath}\\*.*" /s /q`;
+        const cmd = `cmd.exe /c "del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i""`;
         exec(cmd, (error) => {
             if (error) console.error('UserTemp error:', error);
             if (++completed === total) done();
@@ -50,10 +51,10 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp, userTempPath }) => {
 
 ipcMain.on('clean-cache', (event, browsers) => {
     const browserPaths = {
-        chrome: `${process.env.LOCALAPPDATA}\\Google\\Chrome\\User Data\\Default\\Cache`,
-        edge: `${process.env.LOCALAPPDATA}\\Microsoft\\Edge\\User Data\\Default\\Cache`,
-        brave: `${process.env.LOCALAPPDATA}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
-        firefox: `${process.env.APPDATA}\\Mozilla\\Firefox\\Profiles`
+        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Default\\Cache`,
+        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache`,
+        brave: `%localappdata%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
+        firefox: `%appdata%\\Mozilla\\Firefox\\Profiles`
     };
 
     const win = BrowserWindow.getAllWindows()[0];

@@ -39,8 +39,7 @@ function cleantemp() {
 
     window.fileAPI.cleanTemps({
         winTemp: winTempChecked,
-        userTemp: userTempChecked,
-        userTempPath: process.env.TEMP
+        userTemp: userTempChecked
     });
 
     window.fileAPI.onDone(() => {
