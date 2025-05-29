@@ -48,9 +48,9 @@
                 임시 파일 정리하기
                 <div>
                     <input type="checkbox" name="option" id="current">
-                    <label for="current">현재 사용자의 임시 파일만 정리하기</label><br>
+                    <label for="current">일반 프로그램의 임시 파일 정리하기</label><br>
                     <input type="checkbox" name="option" id="all">
-                    <label for="all">모든 임시 파일 정리하기</label>
+                    <label for="all">관리자 권한이 있는 프로그램의 임시 파일 정리하기</label>
                 </div>
             </div>
             <div class="ts-2">삭제 기준
@@ -69,7 +69,7 @@
                     </select>
                 </div>
             </div>
-            <button class="execute" onclick="changeWindow(TempOptions, InProgress)">정리하기</button>
+            <button class="execute" onclick="cleantemp()">정리하기</button>
         </div>
         <div class="sidebar">
             <div class="main">
@@ -160,7 +160,7 @@
                     </div>
                 </div>
             </div>
-            <button class="execute" onclick="changeWindow(ReserveOptions, InProgress)">예약하기</button>
+            <button class="execute" onclick="changeWindow(ReserveOptions, Reserved)">예약하기</button>
         </div>
         <div class="sidebar">
             <div class="main" onclick="changeWindow(ReserveOptions, SelectScreen)">
@@ -177,10 +177,30 @@
             </div>
         </div>
     </div>
+    <div class="Reserved invisible">
+        <div class="r-wrap">
+            <div class="r-1">예약 완료!</div> <button class="execute"
+                onclick="changeWindow(Reserved, SelectScreen)">돌아가기</button>
+        </div>
+        <div class="sidebar">
+            <div class="main" onclick="changeWindow(Reserved, SelectScreen)">
+                <img src="./img/home.png" alt="Main" height="90" width="90">
+                <div>메인 화면</div>
+            </div>
+            <div class="settings" onclick="changeWindow(Reserved, Settings)">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90">
+                <div>설정</div>
+            </div>
+            <div class="previous">
+                <img src="./img/goback.png" alt="Go Back" height="90" width="90">
+                <div>이전</div>
+            </div>
+        </div>
 
-
+    </div>
     <!-- In Progress -->
     <div class="Progressing invisible">
+        <div id="progress-bar"></div>
         <button class="execute" onclick="changeWindow(InProgress, Finished)">임시 버튼: 스킵하기</button>
     </div>
 

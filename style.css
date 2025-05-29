@@ -248,3 +248,49 @@ label:hover {
     font-size: 26px;
     font-weight: 400;
 }
+
+.Reserved {
+    display: flex;
+    height: 100vh;
+    justify-content: space-between;
+}
+
+.Reserved .r-wrap {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.Reserved .r-wrap .r-1 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+#progress-bar {
+    height: 20px;
+    width: 100%;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#progress-bar.indeterminate::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 30%;
+    background: #3b82f6;
+    animation: indeterminate 1.2s infinite linear;
+    border-radius: 10px;
+}
+
+@keyframes indeterminate {
+    0% { left: -30%; }
+    50% { left: 50%; }
+    100% { left: 100%; }
+}

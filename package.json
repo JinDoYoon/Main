@@ -1,6 +1,6 @@
 {
   "name": "main",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "PC Optimization Helper for Windows.",
   "license": "ISC",
   "author": "Andrew",
@@ -15,7 +15,6 @@
     "productName": "PC Optimization Helper",
     "win": {
       "target": "nsis",
-      "requestedExecutionLevel": "requireAdministrator",
       "icon": "img/exeicon.ico"
     }
   },
@@ -24,6 +23,7 @@
     "electron-builder": "^26.0.12"
   },
   "dependencies": {
-    "electron-progressbar": "^2.2.1"
+    "electron-progressbar": "^2.2.1",
+    "sudo-prompt": "^9.2.1"
   }
 }
