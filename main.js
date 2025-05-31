@@ -32,7 +32,7 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
     const total = [winTemp, userTemp].filter(Boolean).length;
 
     if (winTemp) {
-        const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i"\' -Verb Runas';
+        const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del C:\\Windows\\Temp\\*.* /s /q "&" for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"\' -Verb Runas';
 
         exec(cmd, (error) => {
             if (error) console.log('WinTemp error:', error);
@@ -48,6 +48,27 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
         });
     }
 });
+
+ipcMain.handle('detect-browsers', async () => {
+    const localAppData = process.env.LOCALAPPDATA;
+    const appData = process.env.APPDATA;
+
+    const browserPaths = {
+        chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
+        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\Cache_Data`,
+        brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
+        firefox: `${appData}\\Mozilla\\Firefox\\Profiles`
+    };
+
+    const result = {};
+
+    for (const [key, path] of Object.entries(browserPaths)) {
+        result[key] = fs.existsSync(path);
+    }
+
+    return result;  // resolves back to renderer
+});
+
 
 ipcMain.on('clean-cache', (event, browsers) => {
     const browserPaths = {
