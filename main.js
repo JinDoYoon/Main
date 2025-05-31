@@ -14,7 +14,7 @@ function createWindow() {
         }
     });
     win.loadFile('index.html');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -51,13 +51,12 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
 
 ipcMain.handle('detect-browsers', async () => {
     const localAppData = process.env.LOCALAPPDATA;
-    const appData = process.env.APPDATA;
 
     const browserPaths = {
         chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
-        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\Cache_Data`,
+        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\Cache_Data`, // Garbage browser
         brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
-        firefox: `${appData}\\Mozilla\\Firefox\\Profiles`
+        firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles\\`
     };
 
     const result = {};
@@ -66,16 +65,17 @@ ipcMain.handle('detect-browsers', async () => {
         result[key] = fs.existsSync(path);
     }
 
-    return result;  // resolves back to renderer
+    return result;
 });
 
 
 ipcMain.on('clean-cache', (event, browsers) => {
     const browserPaths = {
         chrome: `%localappdata%\\Google\\Chrome\\User Data\\Default\\Cache`,
-        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache`,
+        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache`, // garbage browser
         brave: `%localappdata%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
-        firefox: `%appdata%\\Mozilla\\Firefox\\Profiles`
+        firefox: `%localappdata%\\Mozilla\\Firefox\\Profiles`,
+        // opera: ``
     };
 
     const win = BrowserWindow.getAllWindows()[0];
@@ -89,7 +89,7 @@ ipcMain.on('clean-cache', (event, browsers) => {
         if (!cachePath) return;
 
         const cmd = browser === 'firefox'
-            ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\*.*"`
+            ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\entries\\*.*"`
             : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
         exec(cmd, (error) => {
