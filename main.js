@@ -32,7 +32,7 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
     const total = [winTemp, userTemp].filter(Boolean).length;
 
     if (winTemp) {
-        const cmd = '';
+        const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i"\' -Verb Runas';
 
         exec(cmd, (error) => {
             if (error) console.log('WinTemp error:', error);
@@ -68,7 +68,7 @@ ipcMain.on('clean-cache', (event, browsers) => {
         if (!cachePath) return;
 
         const cmd = browser === 'firefox'
-            ? `for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\*.*"`
+            ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\*.*"`
             : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
         exec(cmd, (error) => {
