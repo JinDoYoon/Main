@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
 const { exec } = require('child_process');
+const path = require('path');
 const fs = require('fs');
+const { create } = require('domain');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -17,7 +18,16 @@ function createWindow() {
     win.webContents.openDevTools();
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    const args = process.argv.slice(1);
+    // if (args.includes('-temp')) {
+
+    // }
+    // if (args.includes('-cache')) {
+
+    // }
+    createWindow();
+});
 
 ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
     const win = BrowserWindow.getAllWindows()[0];
@@ -56,7 +66,9 @@ ipcMain.handle('detect-browsers', async () => {
         edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // Garbage browser
         chrome: `${localAppData}\\Google\\Chrome\\User Data\\`,
         brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
-        firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles\\`
+        firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles\\`,
+        // opera: 
+        // whale: 
     };
 
     const result = {};
@@ -74,10 +86,11 @@ ipcMain.handle('detect-browsers', async () => {
 ipcMain.on('clean-cache', (event, browsers) => {
     const browserPaths = {
         edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // stupid bloatware
-        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Default\\Cache\\Cache_Data`,
+        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
         brave: `%localappdata%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
         firefox: `%localappdata%\\Mozilla\\Firefox\\Profiles`,
         // opera: ``
+        // whale: ``
     };
 
     const win = BrowserWindow.getAllWindows()[0];

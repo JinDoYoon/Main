@@ -12,12 +12,19 @@ const main = document.querySelector('.main');
 const settings = document.querySelector('.settings');
 const previous = document.querySelector('.previous');
 
+let last = SelectScreen;
+
 // Screen Switching
 function changeWindow(oldwin, newwin) {
     oldwin.classList.remove('visible');
     oldwin.classList.add('invisible');
     newwin.classList.remove('invisible');
     newwin.classList.add('visible');
+    last = oldwin;
+}
+
+function backfrom(v) {
+    changeWindow(v, last);
 }
 
 // App Exit
