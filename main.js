@@ -14,7 +14,7 @@ function createWindow() {
         }
     });
     win.loadFile('index.html');
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
@@ -53,8 +53,8 @@ ipcMain.handle('detect-browsers', async () => {
     const localAppData = process.env.LOCALAPPDATA;
 
     const browserPaths = {
-        chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
-        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\Cache_Data`, // Garbage browser
+        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // Garbage browser
+        chrome: `${localAppData}\\Google\\Chrome\\User Data\\`,
         brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
         firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles\\`
     };
@@ -62,7 +62,9 @@ ipcMain.handle('detect-browsers', async () => {
     const result = {};
 
     for (const [key, path] of Object.entries(browserPaths)) {
-        result[key] = fs.existsSync(path);
+        if (fs.existsSync(path)) {
+            result[key] = true;
+        }
     }
 
     return result;
@@ -71,8 +73,8 @@ ipcMain.handle('detect-browsers', async () => {
 
 ipcMain.on('clean-cache', (event, browsers) => {
     const browserPaths = {
-        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Default\\Cache`,
-        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache`, // garbage browser
+        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // stupid bloatware
+        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Default\\Cache\\Cache_Data`,
         brave: `%localappdata%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
         firefox: `%localappdata%\\Mozilla\\Firefox\\Profiles`,
         // opera: ``

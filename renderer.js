@@ -77,9 +77,9 @@ function cleanBrowserCaches() {
     changeWindow(CacheOptions, InProgress);
     document.getElementById('progress-bar').classList.add('indeterminate');
 
-    window.fileAPI.cleanBrowserCache(selected);
+    window.fileAPI.cleanCache(selected);
 
-    window.fileAPI.onBrowserDone(() => {
+    window.fileAPI.onDone(() => {
         document.getElementById('progress-bar').classList.remove('indeterminate');
         changeWindow(InProgress, Finished);
     });
