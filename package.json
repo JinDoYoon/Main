@@ -1,6 +1,6 @@
 {
   "name": "main",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "PC Optimization Helper for Windows.",
   "license": "ISC",
   "author": "Andrew",
@@ -16,6 +16,12 @@
     "win": {
       "target": "nsis",
       "icon": "img/exeicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": true
     }
   },
   "devDependencies": {
