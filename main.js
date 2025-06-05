@@ -21,14 +21,15 @@ function createWindow() {
 app.whenReady().then(() => {
     const args = process.argv.slice(1);
     if (args.includes('-temp')) {
-        
+        cleanTemps(true, true);
     }
     else if (args.includes('-cache')) {
-
+        cleanCache('edge', 'chrome', 'brave', 'firefox');
     }
 
     else if (args.includes('-both')) {
-
+        cleanTemps(true, true);
+        cleanCache('edge', 'chrome', 'brave', 'firefox');
     }
 
     else createWindow();
