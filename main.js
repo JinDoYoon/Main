@@ -21,14 +21,14 @@ function createWindow() {
 app.whenReady().then(() => {
     const args = process.argv.slice(1);
     if (args.includes('-temp')) {
-        cleanTemps(true, true);
+        cleanTemps();
     }
     else if (args.includes('-cache')) {
         cleanCache('edge', 'chrome', 'brave', 'firefox');
     }
 
     else if (args.includes('-both')) {
-        cleanTemps(true, true);
+        cleanTemps();
         cleanCache('edge', 'chrome', 'brave', 'firefox');
     }
 
@@ -125,13 +125,13 @@ ipcMain.on('clean-cache', (event, browsers) => {
 
 ipcMain.on('reserve', (event, cache, temp, date, time) => {
     if (temp && cache) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
     else if (temp) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
     else if (cache) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
 
     exec(cmd, (error) => {

@@ -18,10 +18,10 @@
       "icon": "img/exeicon.ico"
     },
     "nsis": {
-      "oneClick": false,
+      "oneClick": true,
       "perMachine": true,
-      "allowToChangeInstallationDirectory": true,
-      "runAfterFinish": true
+      "allowToChangeInstallationDirectory": false,
+      "runAfterFinish": false
     }
   },
   "devDependencies": {
