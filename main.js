@@ -20,13 +20,18 @@ function createWindow() {
 
 app.whenReady().then(() => {
     const args = process.argv.slice(1);
-    // if (args.includes('-temp')) {
+    if (args.includes('-temp')) {
+        
+    }
+    else if (args.includes('-cache')) {
 
-    // }
-    // if (args.includes('-cache')) {
+    }
 
-    // }
-    createWindow();
+    else if (args.includes('-both')) {
+
+    }
+
+    else createWindow();
 });
 
 ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
@@ -114,5 +119,23 @@ ipcMain.on('clean-cache', (event, browsers) => {
                 win.webContents.send('cleanup-done');
             }
         });
+    });
+});
+
+ipcMain.on('reserve', (event, cache, temp, date, time) => {
+    if (temp && cache) {
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+    }
+    else if (temp) {
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+    }
+    else if (cache) {
+        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "execute" /tr "%localappdata%\Programs\main\PC Optimization Helper.exe -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+    }
+
+    exec(cmd, (error) => {
+        if (error) {
+            console.error('Error reserving space:', error);
+        }
     });
 });
