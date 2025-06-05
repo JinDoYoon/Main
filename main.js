@@ -125,15 +125,14 @@ ipcMain.on('clean-cache', (event, browsers) => {
 
 ipcMain.on('reserve', (event, cache, temp, date, time) => {
     if (temp && cache) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
     else if (temp) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
     else if (cache) {
-        const cmd = `powershell Start-Process schtasks.exe -argumentlist '/create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
     }
-
     exec(cmd, (error) => {
         if (error) {
             console.error('Error reserving space:', error);
