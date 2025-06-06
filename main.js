@@ -2,12 +2,11 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const { create } = require('domain');
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 1080,
-        height: 720,
+        width: 1920, // 1080
+        height: 1050, // 720
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -18,24 +17,11 @@ function createWindow() {
     win.webContents.openDevTools();
 }
 
-app.whenReady().then(() => {
-    const args = process.argv.slice(1);
-    if (args.includes('-temp')) {
-        cleanTemps();
-    }
-    else if (args.includes('-cache')) {
-        cleanCache('edge', 'chrome', 'brave', 'firefox');
-    }
 
-    else if (args.includes('-both')) {
-        cleanTemps();
-        cleanCache('edge', 'chrome', 'brave', 'firefox');
-    }
 
-    else createWindow();
-});
+function Temp(options) {
+    const { winTemp, userTemp } = options;
 
-ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
     const win = BrowserWindow.getAllWindows()[0];
     win.setProgressBar(2); // indeterminate
 
@@ -53,7 +39,7 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
         exec(cmd, (error) => {
             if (error) console.log('WinTemp error:', error);
             if (++completed === total) done();
-        })
+        });
     }
 
     if (userTemp) {
@@ -63,9 +49,9 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
             if (++completed === total) done();
         });
     }
-});
+}
 
-ipcMain.handle('detect-browsers', async () => {
+const detect = async () => {
     const localAppData = process.env.LOCALAPPDATA;
 
     const browserPaths = {
@@ -86,10 +72,9 @@ ipcMain.handle('detect-browsers', async () => {
     }
 
     return result;
-});
+}
 
-
-ipcMain.on('clean-cache', (event, browsers) => {
+function Cache(browser) {
     const browserPaths = {
         edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // stupid bloatware
         chrome: `%localappdata%\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
@@ -99,28 +84,30 @@ ipcMain.on('clean-cache', (event, browsers) => {
         // whale: ``
     };
 
-    const win = BrowserWindow.getAllWindows()[0];
-    win.setProgressBar(2);
+    const cachePath = browserPaths[browser];
+    if (!cachePath) return;
 
-    let completed = 0;
-    const total = browsers.length;
+    const cmd = browser === 'firefox'
+        ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\entries\\*.*"`
+        : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
-    browsers.forEach(browser => {
-        const cachePath = browserPaths[browser];
-        if (!cachePath) return;
-
-        const cmd = browser === 'firefox'
-            ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\entries\\*.*"`
-            : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
-
-        exec(cmd, (error) => {
-            if (error) console.error(`Error cleaning ${browser} cache:`, error);
-            if (++completed === total) {
-                win.setProgressBar(-1);
-                win.webContents.send('cleanup-done');
-            }
-        });
+    exec(cmd, (error) => {
+        if (error) console.error(`Error cleaning ${browser} cache:`, error);
     });
+}
+
+ipcMain.on('clean-cache', (event, browsers) => {
+    browsers.forEach(browser => {
+        Cache(browser);
+    });
+});
+ipcMain.handle('detect-browsers', async () => {
+    const detected = await detect();
+    return detected;
+});
+
+ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
+    Temp({ winTemp, userTemp });
 });
 
 ipcMain.on('reserve', (event, cache, temp, date, time) => {
@@ -132,17 +119,34 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
     let dates = schtasksdate(date);
 
     if (temp && cache) {
-        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
     }
     else if (temp) {
-        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
     }
     else if (cache) {
-        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
     }
     exec(cmd, (error) => {
         if (error) {
-            console.error('Error reserving space:', error);
+            console.error(error);
         }
     });
+});
+
+app.whenReady().then(() => {
+    const args = process.argv.slice(1);
+    if (args.includes('-temp')) {
+        Temp({ winTemp: true, userTemp: true });
+    }
+    else if (args.includes('-cache')) {
+        Cache(detect());
+    }
+
+    else if (args.includes('-both')) {
+        cleanTemps({ winTemp: true, userTemp: true });
+        cleanCache(detect());
+    }
+
+    else createWindow();
 });

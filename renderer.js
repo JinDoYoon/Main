@@ -91,3 +91,11 @@ function cleanBrowserCaches() {
         changeWindow(InProgress, Finished);
     });
 }
+
+function reserve(cacheChecked, tempChecked, date, time) {
+    if (!cacheChecked && !tempChecked) {
+        alert('At least one option must be selected!');
+        return;
+    }
+    window.fileAPI.reserve(cacheChecked, tempChecked, date, time);
+}
