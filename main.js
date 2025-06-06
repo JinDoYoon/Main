@@ -120,13 +120,14 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
     let dates = schtasksdate(date);
 
     if (temp && cache) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -both', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`
     }
     else if (temp) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -temp', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`
     }
     else if (cache) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '"Test"', '/F', '&', 'schtasks', '/create', '/tn', '"Test"', '/tr', '"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache"', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest'" -Verb RunAs`
+        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -cache', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`;
+
     }
     exec(cmd, (error) => {
         if (error) {
