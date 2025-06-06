@@ -124,14 +124,21 @@ ipcMain.on('clean-cache', (event, browsers) => {
 });
 
 ipcMain.on('reserve', (event, cache, temp, date, time) => {
+    let cmd = '';
+    function schtasksdate(inputDate) {
+        const [year, month, day] = inputDate.split("-");
+        return `${month}/${day}/${year}`;
+    }
+    let dates = schtasksdate(date);
+
     if (temp && cache) {
-        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -both"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
     }
     else if (temp) {
-        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -temp"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
     }
     else if (cache) {
-        const cmd = `powershell Start-Process cmd.exe -argumentlist '/k schtasks /delete /tn "Test" /f & schtasks /create /tn "Test" /tr "C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache" /st ${time} /sd ${date} /sc once /rl highest' -Verb Runas`
+        cmd = `Start-Process cmd -ArgumentList 'schtasks', '/create','/tn','"Test"','/tr','"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe -cache"','/st','${time}','/sd','${dates}','/sc','once','/rl','highest' -Verb RunAs`
     }
     exec(cmd, (error) => {
         if (error) {
