@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const { create } = require('domain');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -134,18 +135,25 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
     });
 });
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     const args = process.argv.slice(1);
+
     if (args.includes('-temp')) {
         Temp({ winTemp: true, userTemp: true });
     }
+
     else if (args.includes('-cache')) {
-        Cache(detect());
+        const detected = await detect();
+        const browsers = Object.keys(detected).filter(key => detected[key]);
+        // Clean cache for all detected browsers
+        browsers.forEach(browser => Cache(browser));
     }
 
     else if (args.includes('-both')) {
-        cleanTemps({ winTemp: true, userTemp: true });
-        cleanCache(detect());
+        Temp({ winTemp: true, userTemp: true });
+        const detected = await detect();
+        const browsers = Object.keys(detected).filter(key => detected[key]);
+        browsers.forEach(browser => Cache(browser));
     }
 
     else createWindow();
