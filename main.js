@@ -54,7 +54,7 @@ function reservedTemp(options) {
     const { winTemp, userTemp } = options;
 
     if (winTemp) {
-        const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del C:\\Windows\\Temp\\*.* /s /q "&" for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"\' -Verb Runas';
+        const cmd = 'cmd.exe /c del C:\\Windows\\Temp\\*.* /s /q & for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"';
 
         exec(cmd, (error) => {
             if (error) console.log('WinTemp error:', error);
@@ -128,7 +128,7 @@ function reservedCache(browser) {
     if (!cachePath) return;
 
     const cmd = browser === 'firefox'
-        ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\entries\\*.*"`
+        ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del "%i\\cache2\\entries\\*.*" /s /q`
         : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
     exec(cmd, (error) => {
