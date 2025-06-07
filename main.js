@@ -6,8 +6,8 @@ const { create } = require('domain');
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 1920, // 1080
-        height: 1050, // 720
+        width: 1080,
+        height: 720,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -17,8 +17,6 @@ function createWindow() {
     win.loadFile('index.html');
     win.webContents.openDevTools();
 }
-
-
 
 function Temp(options) {
     const { winTemp, userTemp } = options;
@@ -48,6 +46,25 @@ function Temp(options) {
         exec(cmd, (error) => {
             if (error) console.error('UserTemp error:', error);
             if (++completed === total) done();
+        });
+    }
+}
+
+function reservedTemp(options) {
+    const { winTemp, userTemp } = options;
+
+    if (winTemp) {
+        const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del C:\\Windows\\Temp\\*.* /s /q "&" for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"\' -Verb Runas';
+
+        exec(cmd, (error) => {
+            if (error) console.log('WinTemp error:', error);
+        });
+    }
+
+    if (userTemp) {
+        const cmd = `cmd.exe /c "del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i""`;
+        exec(cmd, (error) => {
+            if (error) console.error('UserTemp error:', error);
         });
     }
 }
@@ -97,6 +114,28 @@ function Cache(browser) {
     });
 }
 
+function reservedCache(browser) {
+    const localAppData = process.env.LOCALAPPDATA;
+
+    const browserPaths = {
+        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`,
+        chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
+        brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
+        firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles`,
+    };
+
+    const cachePath = browserPaths[browser];
+    if (!cachePath) return;
+
+    const cmd = browser === 'firefox'
+        ? `cmd.exe /c for /d %i in ("${cachePath}\\*") do del /s /q "%i\\cache2\\entries\\*.*"`
+        : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
+
+    exec(cmd, (error) => {
+        if (error) console.error(`Error cleaning ${browser} cache:`, error);
+    });
+}
+
 ipcMain.on('clean-cache', (event, browsers) => {
     browsers.forEach(browser => {
         Cache(browser);
@@ -125,15 +164,15 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
 
     if (temp && cache) {
         const schtasksPath = `"${TempPath.replace(/"/g, '""')}"`;
-        cmd = `powershell -Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
     }
     else if (temp) {
         const schtasksPath = `"${CachePath.replace(/"/g, '""')}"`;
-        cmd = `powershell -Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
     }
     else if (cache) {
         const schtasksPath = `"${BothPath.replace(/"/g, '""')}"`;
-        cmd = `powershell -Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
 
     }
 
@@ -148,21 +187,21 @@ app.whenReady().then(async () => {
     const args = process.argv.slice(1);
 
     if (args.includes('-temp')) {
-        Temp({ winTemp: true, userTemp: true });
+        reservedTemp({ winTemp: true, userTemp: true });
     }
 
     else if (args.includes('-cache')) {
         const detected = await detect();
         const browsers = Object.keys(detected).filter(key => detected[key]);
         // Clean cache for all detected browsers
-        browsers.forEach(browser => Cache(browser));
+        browsers.forEach(browser => reservedCache(browser));
     }
 
     else if (args.includes('-both')) {
-        Temp({ winTemp: true, userTemp: true });
+        reservedTemp({ winTemp: true, userTemp: true });
         const detected = await detect();
         const browsers = Object.keys(detected).filter(key => detected[key]);
-        browsers.forEach(browser => Cache(browser));
+        browsers.forEach(browser => reservedCache(browser));
     }
 
     else createWindow();
