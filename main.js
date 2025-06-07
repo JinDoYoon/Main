@@ -157,7 +157,7 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
         return `${month}/${day}/${year}`;
     }
     let dates = schtasksdate(date);
-    const TempPath = `'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -temp"`;
+    const TempPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -temp"`;
     const CachePath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -cache"`;
     const BothPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -both"`;
 
