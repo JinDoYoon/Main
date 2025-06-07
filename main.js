@@ -163,16 +163,16 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
 
 
     if (temp && cache) {
-        const schtasksPath = `"${TempPath.replace(/"/g, '""')}"`;
-        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        const schtasksPath = `\\"${BothPath}\\"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
     }
     else if (temp) {
-        const schtasksPath = `"${CachePath.replace(/"/g, '""')}"`;
-        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        const schtasksPath = `\\"${TempPath}\\"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
     }
     else if (cache) {
-        const schtasksPath = `"${BothPath.replace(/"/g, '""')}"`;
-        cmd = `powershell Start-Process schtasks.exe -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
+        const schtasksPath = `\\"${CachePath}\\"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
 
     }
 
