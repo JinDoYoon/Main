@@ -118,17 +118,25 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
         return `${month}/${day}/${year}`;
     }
     let dates = schtasksdate(date);
+    const TempPath = `"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -temp`;
+    const CachePath = `"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -cache`;
+    const BothPath = `"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe" -both`;
+
 
     if (temp && cache) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -both', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`
+        const schtasksPath = `"${TempPath.replace(/"/g, '""')}"`;
+        cmd = `powershell -Command "Start-Process schtasks -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
     }
     else if (temp) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -temp', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`
+        const schtasksPath = `"${CachePath.replace(/"/g, '""')}"`;
+        cmd = `powershell -Command "Start-Process schtasks -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
     }
     else if (cache) {
-        cmd = `powershell Start-Process cmd -ArgumentList "'/k', 'schtasks', '/delete', '/tn', '\"Test\"', '/F', '&', 'schtasks', '/create', '/tn', '\"Test\"', '/tr', '\"C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe\" -cache', '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f'" -Verb RunAs`;
+        const schtasksPath = `"${BothPath.replace(/"/g, '""')}"`;
+        cmd = `powershell -Command "Start-Process schtasks -ArgumentList '/create', '/tn', 'Test', '/tr', ${schtasksPath}, '/st', '${time}', '/sd', '${dates}', '/sc', 'once', '/rl', 'highest', '/f' -Verb RunAs"`;
 
     }
+
     exec(cmd, (error) => {
         if (error) {
             console.error(error);
