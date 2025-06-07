@@ -4,7 +4,6 @@ body {
     height: 100vh;
 }
 
-
 .invisible {
     visibility: hidden;
     position: absolute;
@@ -270,6 +269,7 @@ label:hover {
     font-weight: 500;
 }
 
+/* I have no idea how this shit works... */
 #progress-bar {
     height: 20px;
     width: 100%;
@@ -290,7 +290,15 @@ label:hover {
 }
 
 @keyframes indeterminate {
-    0% { left: -30%; }
-    50% { left: 50%; }
-    100% { left: 100%; }
+    0% {
+        left: -30%;
+    }
+
+    50% {
+        left: 50%;
+    }
+
+    100% {
+        left: 100%;
+    }
 }

@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+// If I rename one of these, it would malfunction. Istg don't)
 contextBridge.exposeInMainWorld('fileAPI', {
     cleanTemps: (options) => ipcRenderer.send('clean-temps', options),
     cleanCache: (browsers) => ipcRenderer.send('clean-cache', browsers),

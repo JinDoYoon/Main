@@ -16,7 +16,6 @@
         <button onclick="changeWindow(StartScreen, SelectScreen)">시작하기</button>
     </div>
 
-
     <!-- Select Screen -->
     <div class="SelectScreen invisible">
         <div class="selection">
@@ -24,6 +23,7 @@
             <button class="temp" onclick="changeWindow(SelectScreen, TempOptions)">임시 파일 정리</button>
             <button class="reserve" onclick="changeWindow(SelectScreen, ReserveOptions)">정리 예약하기</button>
         </div>
+
         <div class="sidebar">
             <div class="main">
                 <img src="./img/home.png" alt="Main" width="90" height="90">
@@ -70,6 +70,7 @@
             </div>
             <button class="execute" onclick="cleantemp()">정리하기</button>
         </div>
+
         <div class="sidebar">
             <div class="main">
                 <img src="./img/home.png" alt="Main" height="90" width="90"
@@ -87,7 +88,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Cache Options -->
     <div class="CacheOptions invisible">
@@ -112,8 +112,6 @@
             </div>
         </div>
     </div>
-
-
 
     <!-- Reserve Options -->
     <div class="ReserveOptions invisible">
@@ -141,6 +139,7 @@
             <button class="execute"
                 onclick="changeWindow(ReserveOptions, Reserved); reserve(document.getElementById('che').checked, document.getElementById('tmp').checked, document.getElementById('ReserveDate').value, document.getElementById('ReserveTime').value)">예약하기</button>
         </div>
+
         <div class="sidebar">
             <div class="main" onclick="changeWindow(ReserveOptions, SelectScreen)">
                 <img src="./img/home.png" alt="Main" height="90" width="90">
@@ -156,11 +155,14 @@
             </div>
         </div>
     </div>
+
+    <!-- Finish screen only for Reservation -->
     <div class="Reserved invisible">
         <div class="r-wrap">
             <div class="r-1">예약 완료!</div> <button class="execute"
                 onclick="changeWindow(Reserved, SelectScreen)">돌아가기</button>
         </div>
+
         <div class="sidebar">
             <div class="main" onclick="changeWindow(Reserved, SelectScreen)">
                 <img src="./img/home.png" alt="Main" height="90" width="90">
@@ -175,8 +177,8 @@
                 <div>이전</div>
             </div>
         </div>
-
     </div>
+
     <!-- In Progress -->
     <div class="Progressing invisible">
         <div id="progress-bar"></div>
@@ -254,6 +256,7 @@
                 <div>현재 버전: 0.1.0</div>
             </div>
         </div>
+
         <div class="sidebar">
             <div class="main">
                 <img src="./img/home.png" alt="Main" height="90" width="90"
@@ -271,6 +274,7 @@
         </div>
     </div>
 
+    <!-- JavaScript TIME -->
     <script src="./renderer.js"></script>
 </body>
 

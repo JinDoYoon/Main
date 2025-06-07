@@ -1,8 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
+const { create } = require('domain');
 const path = require('path');
 const fs = require('fs');
-const { create } = require('domain');
+const logPath = 'C:\\TrashLog.txt';
+
+function log(message) {
+    fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\n`);
+}
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -15,28 +20,26 @@ function createWindow() {
         }
     });
     win.loadFile('index.html');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 }
 
 function Temp(options) {
     const { winTemp, userTemp } = options;
-
     const win = BrowserWindow.getAllWindows()[0];
-    win.setProgressBar(2); // indeterminate
-
+    const total = [winTemp, userTemp].filter(Boolean).length;
     const done = () => {
         win.setProgressBar(-1);
         win.webContents.send('cleanup-done');
     };
 
+    win.setProgressBar(2); // indeterminate
     let completed = 0;
-    const total = [winTemp, userTemp].filter(Boolean).length;
 
     if (winTemp) {
         const cmd = 'powershell Start-Process cmd.exe -argumentlist \'/c del C:\\Windows\\Temp\\*.* /s /q "&" for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"\' -Verb Runas';
 
         exec(cmd, (error) => {
-            if (error) console.log('WinTemp error:', error);
+            if (error) log('WinTemp error:', error);
             if (++completed === total) done();
         });
     }
@@ -44,7 +47,7 @@ function Temp(options) {
     if (userTemp) {
         const cmd = `cmd.exe /c "del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i""`;
         exec(cmd, (error) => {
-            if (error) console.error('UserTemp error:', error);
+            if (error) log('UserTemp error:', error);
             if (++completed === total) done();
         });
     }
@@ -52,26 +55,27 @@ function Temp(options) {
 
 function reservedTemp(options) {
     const { winTemp, userTemp } = options;
+    const temppath = process.env.TMP;
 
     if (winTemp) {
         const cmd = 'cmd.exe /c del C:\\Windows\\Temp\\*.* /s /q & for /d %i in (C:\\Windows\\Temp\\*) do rd /s /q "%i"';
 
         exec(cmd, (error) => {
-            if (error) console.log('WinTemp error:', error);
+            if (error) log('WinTemp error:', error);
         });
     }
 
     if (userTemp) {
-        const cmd = `cmd.exe /c "del %temp%\\*.* /s /q & for /d %i in (%temp%\\*) do rd /s /q "%i""`;
+        const cmd = `cmd.exe /c "del ${temppath}\\*.* /s /q & for /d %i in (${temppath}\\*) do rd /s /q "%i""`;
+
         exec(cmd, (error) => {
-            if (error) console.error('UserTemp error:', error);
+            if (error) log('UserTemp error:', error);
         });
     }
 }
 
 const detect = async () => {
     const localAppData = process.env.LOCALAPPDATA;
-
     const browserPaths = {
         edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // Garbage browser
         chrome: `${localAppData}\\Google\\Chrome\\User Data\\`,
@@ -80,7 +84,6 @@ const detect = async () => {
         // opera: 
         // whale: 
     };
-
     const result = {};
 
     for (const [key, path] of Object.entries(browserPaths)) {
@@ -93,16 +96,17 @@ const detect = async () => {
 }
 
 function Cache(browser) {
+    const localAppData = process.env.LOCALAPPDATA;
     const browserPaths = {
-        edge: `%localappdata%\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // stupid bloatware
-        chrome: `%localappdata%\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
-        brave: `%localappdata%\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
-        firefox: `%localappdata%\\Mozilla\\Firefox\\Profiles`,
+        edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`, // stupid bloatware
+        chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
+        brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
+        firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles`,
         // opera: ``
         // whale: ``
     };
-
     const cachePath = browserPaths[browser];
+
     if (!cachePath) return;
 
     const cmd = browser === 'firefox'
@@ -110,21 +114,20 @@ function Cache(browser) {
         : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
     exec(cmd, (error) => {
-        if (error) console.error(`Error cleaning ${browser} cache:`, error);
+        if (error) log(`Error cleaning ${browser} cache:`, error);
     });
 }
 
 function reservedCache(browser) {
     const localAppData = process.env.LOCALAPPDATA;
-
     const browserPaths = {
         edge: `${localAppData}\\Microsoft\\Edge\\User Data\\Default\\Cache\\Cache_Data`,
         chrome: `${localAppData}\\Google\\Chrome\\User Data\\Profile 1\\Cache\\Cache_Data`,
         brave: `${localAppData}\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Cache`,
         firefox: `${localAppData}\\Mozilla\\Firefox\\Profiles`,
     };
-
     const cachePath = browserPaths[browser];
+
     if (!cachePath) return;
 
     const cmd = browser === 'firefox'
@@ -132,15 +135,14 @@ function reservedCache(browser) {
         : `cmd.exe /c del "${cachePath}\\*.*" /s /q`;
 
     exec(cmd, (error) => {
-        if (error) console.error(`Error cleaning ${browser} cache:`, error);
+        if (error) log(`Error cleaning ${browser} cache:`, error);
     });
 }
 
 ipcMain.on('clean-cache', (event, browsers) => {
-    browsers.forEach(browser => {
-        Cache(browser);
-    });
+    browsers.forEach(browser => Cache(browser));
 });
+
 ipcMain.handle('detect-browsers', async () => {
     const detected = await detect();
     return detected;
@@ -151,35 +153,30 @@ ipcMain.on('clean-temps', (event, { winTemp, userTemp }) => {
 });
 
 ipcMain.on('reserve', (event, cache, temp, date, time) => {
-    let cmd = '';
     function schtasksdate(inputDate) {
         const [year, month, day] = inputDate.split("-");
         return `${month}/${day}/${year}`;
     }
-    let dates = schtasksdate(date);
+
     const TempPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -temp"`;
     const CachePath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -cache"`;
     const BothPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -both"`;
-
+    let cmd = '';
+    let dates = schtasksdate(date);
 
     if (temp && cache) {
         const schtasksPath = `\\"${BothPath}\\"`;
         cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
-    }
-    else if (temp) {
+    } else if (temp) {
         const schtasksPath = `\\"${TempPath}\\"`;
         cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
-    }
-    else if (cache) {
+    } else if (cache) {
         const schtasksPath = `\\"${CachePath}\\"`;
         cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
-
     }
 
     exec(cmd, (error) => {
-        if (error) {
-            console.error(error);
-        }
+        if (error) log(error);
     });
 });
 

@@ -1,5 +1,5 @@
 .vscode/
-build/
 dist/
+build/
 node_modules/
 build.bat

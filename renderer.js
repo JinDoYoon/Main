@@ -1,3 +1,4 @@
+// Holy yaps here!
 const StartScreen = document.querySelector('.StartScreen');
 const SelectScreen = document.querySelector('.SelectScreen');
 const TempOptions = document.querySelector('.TempOptions');
@@ -23,15 +24,12 @@ function changeWindow(oldwin, newwin) {
     last = oldwin;
 }
 
+// Deja vu
 function backfrom(v) {
     changeWindow(v, last);
 }
 
-// App Exit
-function exit() {
-    window.close();
-}
-
+// Clean the junks
 function cleantemp() {
     const winTempChecked = document.getElementById('all').checked;
     const userTempChecked = document.getElementById('current').checked;
@@ -55,6 +53,7 @@ function cleantemp() {
     });
 }
 
+// Detects Browser (I have no idea why this is not a function but it works so whatever)
 window.fileAPI.detectBrowsers().then(detected => {
     const container = document.querySelector('.BrowserOptions');
     container.innerHTML = '';
@@ -69,6 +68,7 @@ window.fileAPI.detectBrowsers().then(detected => {
     }
 });
 
+// Gets the info from the non function above and sends something to main
 function cleanBrowserCaches() {
     const supported = ['chrome', 'edge', 'brave', 'firefox'];
     const selected = supported.filter(id => {
@@ -92,10 +92,16 @@ function cleanBrowserCaches() {
     });
 }
 
+// Reserving
 function reserve(cacheChecked, tempChecked, date, time) {
     if (!cacheChecked && !tempChecked) {
         alert('At least one option must be selected!');
         return;
     }
     window.fileAPI.reserve(cacheChecked, tempChecked, date, time);
+}
+
+// App Exit
+function exit() {
+    window.close();
 }
