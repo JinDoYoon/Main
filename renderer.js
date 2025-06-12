@@ -31,10 +31,10 @@ function backfrom(v) {
 
 // Clean the junks
 function cleantemp() {
-    const winTempChecked = document.getElementById('all').checked;
-    const userTempChecked = document.getElementById('current').checked;
+    const isWinTemp = document.getElementById('all').checked;
+    const isUserTemp = document.getElementById('current').checked;
 
-    if (!winTempChecked && !userTempChecked) {
+    if (!isWinTemp && !isUserTemp) {
         alert('적어도 하나의 항목은 선택하셔야 합니다.');
         return;
     }
@@ -43,8 +43,8 @@ function cleantemp() {
     document.getElementById('progress-bar').classList.add('indeterminate');
 
     window.fileAPI.cleanTemps({
-        winTemp: winTempChecked,
-        userTemp: userTempChecked
+        winTemp: isWinTemp,
+        userTemp: isUserTemp
     });
 
     window.fileAPI.onDone(() => {
@@ -101,7 +101,15 @@ function reserve(cacheChecked, tempChecked, date, time) {
     window.fileAPI.reserve(cacheChecked, tempChecked, date, time);
 }
 
-// App Exit
-function exit() {
-    window.close();
+// Trying to exit
+function requestExit() {
+    const isMain = document.getElementById('gomain').checked;
+    const reboot = document.getElementById('reboot').checked;
+
+    if (isMain) {
+        changeWindow(Finished, SelectScreen);
+    }
+    if (reboot) {
+        window.fileAPI.reboot();
+    }
 }

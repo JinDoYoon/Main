@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, dialog, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { create } = require('domain');
 const path = require('path');
@@ -139,6 +139,18 @@ function reservedCache(browser) {
     });
 }
 
+async function YorN(title, message) {
+    const result = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        defaultId: 1,
+        cancelId:0,
+        title: title,
+        message: message
+    })
+    return result.response
+}
+
 ipcMain.on('clean-cache', (event, browsers) => {
     browsers.forEach(browser => Cache(browser));
 });
@@ -178,6 +190,17 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
     exec(cmd, (error) => {
         if (error) log(error);
     });
+});
+
+ipcMain.on('reboot', async () => {
+    const result = await YorN('다시 시작', '지금 시스템을 다시 시작하시겠습니까?');
+
+    if (result) {
+        log('Rebooting system...');
+        exec('shutdown /r /t 0', (error) => {
+            if (error) log('Reboot error:', error);
+        });
+    }
 });
 
 app.whenReady().then(async () => {
