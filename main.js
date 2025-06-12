@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const { create } = require('domain');
 const path = require('path');
 const fs = require('fs');
-const logPath = 'C:\\TrashLog.txt';
+const logPath = `${process.env.USERPROFILE}\\Trash.log`;
 
 function log(message) {
     fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\n`);
