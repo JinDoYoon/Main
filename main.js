@@ -185,6 +185,7 @@ app.whenReady().then(async () => {
 
     if (args.includes('-temp')) {
         reservedTemp({ winTemp: true, userTemp: true });
+        setTimeout(() => app.exit(0), 5000);
     }
 
     else if (args.includes('-cache')) {
@@ -192,6 +193,7 @@ app.whenReady().then(async () => {
         const browsers = Object.keys(detected).filter(key => detected[key]);
         // Clean cache for all detected browsers
         browsers.forEach(browser => reservedCache(browser));
+        setTimeout(() => app.exit(0), 5000);
     }
 
     else if (args.includes('-both')) {
@@ -199,6 +201,7 @@ app.whenReady().then(async () => {
         const detected = await detect();
         const browsers = Object.keys(detected).filter(key => detected[key]);
         browsers.forEach(browser => reservedCache(browser));
+        setTimeout(() => app.exit(0), 5000);
     }
 
     else createWindow();
