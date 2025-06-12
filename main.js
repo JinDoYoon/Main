@@ -158,21 +158,21 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
         return `${month}/${day}/${year}`;
     }
 
-    const TempPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -temp"`;
-    const CachePath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -cache"`;
-    const BothPath = `"'C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe' -both"`;
+    const TempPath = `"''C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe'' -temp"`;
+    const CachePath = `"''C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe'' -cache"`;
+    const BothPath = `"''C:\\Program Files\\PC Optimization Helper\\PC Optimization Helper.exe'' -both"`;
     let cmd = '';
     let dates = schtasksdate(date);
 
     if (temp && cache) {
         const schtasksPath = `\\"${BothPath}\\"`;
-        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/k', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
     } else if (temp) {
         const schtasksPath = `\\"${TempPath}\\"`;
-        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/k', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
     } else if (cache) {
         const schtasksPath = `\\"${CachePath}\\"`;
-        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/c', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
+        cmd = `powershell -Command "Start-Process cmd -ArgumentList '/k', 'schtasks /delete /tn \\"Test\\" /f & schtasks /create /tn \\"Test\\" /tr ${schtasksPath} /st ${time} /sd ${dates} /sc once /rl highest /f' -Verb RunAs"`;
     }
 
     exec(cmd, (error) => {
