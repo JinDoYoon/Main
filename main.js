@@ -195,7 +195,7 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
 ipcMain.on('reboot', async () => {
     const result = await YorN('다시 시작', '지금 시스템을 다시 시작하시겠습니까?');
 
-    if (result) {
+    if (!result) {
         log('Rebooting system...');
         exec('shutdown /r /t 0', (error) => {
             if (error) log('Reboot error:', error);
