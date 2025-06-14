@@ -1,6 +1,7 @@
 const { app, dialog, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { create } = require('domain');
+// const regedit = require('regedit');
 const path = require('path');
 const fs = require('fs');
 const logPath = `${process.env.USERPROFILE}\\Trash.log`;
@@ -204,7 +205,7 @@ ipcMain.on('reboot', async () => {
 });
 
 ipcMain.on('apply-settings', (event, Startup, AutoRestart) => {
-    
+
 });
 
 app.whenReady().then(async () => {

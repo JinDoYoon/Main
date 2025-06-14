@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "electron-progressbar": "^2.2.1",
+    "regedit": "^5.1.4",
     "sudo-prompt": "^9.2.1"
   }
 }
