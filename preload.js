@@ -7,5 +7,6 @@ contextBridge.exposeInMainWorld('fileAPI', {
     onDone: (callback) => ipcRenderer.once('cleanup-done', callback),
     detectBrowsers: () => ipcRenderer.invoke('detect-browsers'),
     reserve: (cache, temp, date, time) => ipcRenderer.send('reserve', cache, temp, date, time),
-    reboot: () => ipcRenderer.send('reboot')
+    reboot: () => ipcRenderer.send('reboot'),
+    changeSettings: (Startup, AutoRestart) => ipcRenderer.send('apply-settings', Startup, AutoRestart)
 });

@@ -139,7 +139,7 @@ function reservedCache(browser) {
     });
 }
 
-async function YorN(title, message) {
+async function YesOrNo(title, message) {
     const result = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
         type: 'question',
         buttons: ['Yes', 'No'],
@@ -193,7 +193,7 @@ ipcMain.on('reserve', (event, cache, temp, date, time) => {
 });
 
 ipcMain.on('reboot', async () => {
-    const result = await YorN('다시 시작', '지금 시스템을 다시 시작하시겠습니까?');
+    const result = await YesOrNo('다시 시작', '지금 시스템을 다시 시작하시겠습니까?');
 
     if (!result) {
         log('Rebooting system...');
@@ -201,6 +201,10 @@ ipcMain.on('reboot', async () => {
             if (error) log('Reboot error:', error);
         });
     }
+});
+
+ipcMain.on('apply-settings', (event, Startup, AutoRestart) => {
+    
 });
 
 app.whenReady().then(async () => {

@@ -113,3 +113,7 @@ function requestExit() {
         window.fileAPI.reboot();
     }
 }
+
+function changeSettings(Startup, Autorestart) {
+    window.fileAPI.changeSettings(Startup, Autorestart);
+}

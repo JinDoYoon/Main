@@ -137,7 +137,8 @@
                 </div>
             </div>
             <button class="execute"
-                onclick="changeWindow(ReserveOptions, Reserved); reserve(document.getElementById('che').checked, document.getElementById('tmp').checked, document.getElementById('ReserveDate').value, document.getElementById('ReserveTime').value)">예약하기</button>
+                onclick="changeWindow(ReserveOptions, Reserved);
+                reserve(document.getElementById('che').checked, document.getElementById('tmp').checked, document.getElementById('ReserveDate').value, document.getElementById('ReserveTime').value)">예약하기</button>
         </div>
 
         <div class="sidebar">
@@ -149,7 +150,7 @@
                 <img src="./img/settings.png" alt="Settings" height="90" width="90">
                 <div>설정</div>
             </div>
-            <div class="previous">
+            <div class="previous" onclick="backfrom(ReserveOptions)">
                 <img src="./img/goback.png" alt="Go Back" height="90" width="90">
                 <div>이전</div>
             </div>
@@ -159,8 +160,8 @@
     <!-- Finish screen only for Reservation -->
     <div class="Reserved invisible">
         <div class="r-wrap">
-            <div class="r-1">예약 완료!</div> <button class="execute"
-                onclick="changeWindow(Reserved, SelectScreen)">돌아가기</button>
+            <div class="r-1">예약 완료!</div>
+            <button class="execute" onclick="changeWindow(Reserved, SelectScreen)">돌아가기</button>
         </div>
 
         <div class="sidebar">
@@ -172,7 +173,7 @@
                 <img src="./img/settings.png" alt="Settings" height="90" width="90">
                 <div>설정</div>
             </div>
-            <div class="previous">
+            <div class="previous" onclick="backfrom(Reserved)">
                 <img src="./img/goback.png" alt="Go Back" height="90" width="90">
                 <div>이전</div>
             </div>
@@ -204,14 +205,12 @@
         </div>
 
         <div class="sidebar">
-            <div class="main">
-                <img src="./img/home.png" alt="Main" height="90" width="90"
-                    onclick="changeWindow(Finished, SelectScreen)">
+            <div class="main" onclick="changeWindow(Finished, SelectScreen)">
+                <img src="./img/home.png" alt="Main" height="90" width="90">
                 <div>메인 화면</div>
             </div>
-            <div class="settings">
-                <img src="./img/settings.png" alt="Settings" height="90" width="90"
-                    onclick="changeWindow(Finished, Settings)">
+            <div class="settings" onclick="changeWindow(Finished, Settings)">
+                <img src="./img/settings.png" alt="Settings" height="90" width="90">
                 <div>설정</div>
             </div>
             <div class="previous">
@@ -224,7 +223,7 @@
     <!-- Settings -->
     <div class="Settings invisible">
         <div class="wrap">
-            <div class="language">
+            <!-- <div class="language">
                 언어 선택
                 <div>
                     <input type="checkbox" name="language" id="korean" checked>
@@ -234,32 +233,33 @@
                     <input type="checkbox" name="language" id="english">
                     <label for="english">영어</label>
                 </div>
-            </div><br>
+            </div><br> -->
             <div class="environment">
                 환경 설정
                 <div>
                     <input type="checkbox" name="environment" id="start">
-                    <label for="start">컴퓨터와 함께 시작하기</label>
+                    <label for="start">컴퓨터와 시작할 때 실행하기</label>
                 </div>
                 <div>
                     <input type="checkbox" name="environment" id="restart">
                     <label for="restart">최적화가 끝난 후 항상 재부팅하기</label>
-                </div><br>
-                <div>현재 버전: 0.4.12</div>
+                </div>
+                <div class="execute" onclick="changeSettings(document.getElementById('start').checked, document.getElementById('restart').checked)">저장하기</div>
+                <br>
+                <div>현재 버전: 0.5.0</div>
             </div>
         </div>
 
-        <div class="sidebar">
+        <div class="sidebar" onclick="changeWindow(Settings, SelectScreen)">
             <div class="main">
-                <img src="./img/home.png" alt="Main" height="90" width="90"
-                    onclick="changeWindow(Settings, SelectScreen)">
+                <img src="./img/home.png" alt="Main" height="90" width="90">
                 <div>메인 화면</div>
             </div>
             <div class="settings">
                 <img src="./img/settings.png" alt="Settings" height="90" width="90">
                 <div>설정</div>
             </div>
-            <div class="previous">
+            <div class="previous" onclick="backfrom(Settings)">
                 <img src="./img/goback.png" alt="Go Back" height="90" width="90">
                 <div>이전</div>
             </div>
