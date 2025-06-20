@@ -4,7 +4,7 @@ const { create } = require('domain');
 // const regedit = require('regedit');
 const path = require('path');
 const fs = require('fs');
-const logPath = `${process.env.USERPROFILE}\\Trash.log`;
+const logPath = `${process.env.USERPROFILE}\\Cleaning.log`;
 
 function log(message) {
     fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\n`);
