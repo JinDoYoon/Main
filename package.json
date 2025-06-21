@@ -30,6 +30,7 @@
     "electron-builder": "^26.0.12"
   },
   "dependencies": {
+    "core-util-is": "^1.0.3",
     "electron-progressbar": "^2.2.1",
     "regedit": "^5.1.4",
     "sudo-prompt": "^9.2.1"
