@@ -9,7 +9,9 @@ class AppKillerPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
     return listOf(
       AppKillerModule(reactContext),
-      AppDetectorModule(reactContext)
+      AppDetectorModule(reactContext),
+      CurrentAppModule(reactContext),
+      OverlayServiceModule(reactContext)
     )
   }
 
