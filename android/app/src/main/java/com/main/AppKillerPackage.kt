@@ -6,12 +6,15 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ViewManager
 
 class AppKillerPackage : ReactPackage {
-  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> =
-    listOf(
+  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+    return listOf(
       AppKillerModule(reactContext),
       AppDetectorModule(reactContext)
     )
+  }
 
-  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager> =
-    emptyList()
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    // no custom view managers
+    return emptyList()
+  }
 }

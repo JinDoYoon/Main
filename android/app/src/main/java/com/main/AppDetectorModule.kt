@@ -7,7 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
-class AppDetectorModule(private val reactContext: ReactApplicationContext)
+class AppDetectorModule(reactContext: ReactApplicationContext)
   : ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String = "AppDetector"
@@ -15,7 +15,7 @@ class AppDetectorModule(private val reactContext: ReactApplicationContext)
   @ReactMethod
   fun getInstalledApps(promise: Promise) {
     try {
-      val pm = reactContext.packageManager
+      val pm = reactApplicationContext.packageManager
       val apps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
       val result = Arguments.createArray()
 

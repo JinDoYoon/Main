@@ -6,14 +6,15 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
-class AppKillerModule(reactContext: ReactApplicationContext) 
+class AppKillerModule(reactContext: ReactApplicationContext)
   : ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String = "AppKiller"
 
   @ReactMethod
   fun killApp(packageName: String) {
-    val am = reactContext
+    // use reactApplicationContext (inherited) rather than an undefined reactContext
+    val am = reactApplicationContext
       .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     am.killBackgroundProcesses(packageName)
   }
