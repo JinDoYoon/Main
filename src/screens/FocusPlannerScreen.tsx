@@ -125,24 +125,45 @@ export default function FocusPlannerScreen() {
                 OverlayService.startOverlay();
                 return;
             }
+
             const now = new Date();
-            const idx = now.getDay() - 1;
-            if (idx < 0 || !timetable[DAYS[idx]].has(now.getHours())) {
+            const dayIdx = now.getDay() - 1;
+            const hour = now.getHours();
+            const inSlot = dayIdx >= 0 && timetable[DAYS[dayIdx]].has(hour);
+            console.log(`[Schedule] Time: ${DAYS[dayIdx] ?? 'none'} ${hour}:00 – inSlot=${inSlot}`);
+
+            let pkg = '';
+            try {
+                pkg = await CurrentApp.getForegroundApp();
+                console.log('[Schedule] Foreground pkg:', pkg);
+            } catch (e) {
+                console.warn('[Schedule] Could not get fg app', e);
                 OverlayService.stopOverlay();
                 return;
             }
-            if (Platform.OS === 'android' && CurrentApp.getForegroundApp) {
-                try {
-                    const pkg: string = await CurrentApp.getForegroundApp();
-                    if (restricted.has(pkg)) OverlayService.startOverlay();
-                    else OverlayService.stopOverlay();
-                } catch {
-                    OverlayService.stopOverlay();
-                }
+
+            if (ALLOWED_PACKAGES.has(pkg)) {
+                console.log('[Schedule] Allowed system/app UI – hiding overlay');
+                OverlayService.stopOverlay();
+                return;
+            }
+            if (!restricted.has(pkg)) {
+                console.log('[Schedule] App not in restricted list – hiding overlay');
+                OverlayService.stopOverlay();
+                return;
+            }
+
+            if (inSlot) {
+                console.log('[Schedule] Restricted app in slot – showing overlay');
+                OverlayService.startOverlay();
+            } else {
+                console.log('[Schedule] Restricted app but outside slot – hiding overlay');
+                OverlayService.stopOverlay();
             }
         }, 3000);
         return () => BackgroundTimer.clearInterval(id);
     }, [timetable, restricted, debugMode]);
+
 
     // Helpers to toggle
     const toggleSlot = (day: Day, hour: number) => {
