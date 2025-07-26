@@ -77,7 +77,7 @@ export default function FocusPlannerScreen() {
             AppDetector.getInstalledApps()
                 .then((list: AppInfo[]) => {
                     // Filter out system apps but keep those in ALLOWED_PACKAGES
-                    const userApps = list.filter(a => !a.pkg.startsWith('com.android') && !a.pkg.startsWith('android.'));
+                    const userApps = list.filter(a => !a.pkg.startsWith('android.'));
                     setApps(userApps);
                     // Restrict all except allowed
                     const initial = new Set(userApps.filter(a => !ALLOWED_PACKAGES.has(a.pkg)).map(a => a.pkg));
