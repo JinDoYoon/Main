@@ -119,8 +119,8 @@ export default function FocusPlannerScreen() {
                 restricted.forEach((pkg: string) => AppKiller.killApp(pkg));
                 setFocusMinutes(m => Math.min(m + 1, DAILY_TARGET));
             }
-        }, 60000);
-        return () => { BackgroundTimer.clearInterval(id); ForegroundService.stop(); };
+        }, 3000);
+        return () => { BackgroundTimer.clearInterval(id); };
     }, [timetable, restricted, debugMode]);
 
     // Foreground overlay logic
@@ -193,7 +193,7 @@ export default function FocusPlannerScreen() {
                 </View>
                 <Text style={styles.header}>Weekly Timetable</Text>
                 <Text style={styles.description}>Choose times to avoid phone use</Text>
-                <Text style={styles.weekRange}>{fmt(weekRange.monday)} – {fmt(weekRange.sunday)}</Text>
+                <Text style={styles.weekRange}>{fmt(weekRange.monday)} - {fmt(weekRange.sunday)}</Text>
                 <View style={styles.timetableWrapper}>
                     <ScrollView nestedScrollEnabled>{renderHeader()}{HOURS.map(renderRow)}</ScrollView>
                 </View>
