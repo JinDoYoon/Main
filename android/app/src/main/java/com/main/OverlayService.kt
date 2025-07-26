@@ -9,12 +9,14 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.util.Log
 
 class OverlayService : Service() {
   private lateinit var windowManager: WindowManager
   private var overlayView: FrameLayout? = null
 
   override fun onCreate() {
+    Log.d("OverlayService", "onCreate: overlay view being added")
     super.onCreate()
     windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
@@ -44,6 +46,7 @@ class OverlayService : Service() {
   }
 
   override fun onDestroy() {
+    Log.d("OverlayService", "onDestroy: overlay view being removed")
     super.onDestroy()
     // Clean up
     overlayView?.let { windowManager.removeView(it) }

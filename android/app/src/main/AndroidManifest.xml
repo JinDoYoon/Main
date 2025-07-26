@@ -24,5 +24,9 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+      <service
+    android:name=".OverlayService"
+    android:exported="false"
+    android:permission="android.permission.SYSTEM_ALERT_WINDOW"/>
     </application>
 </manifest>

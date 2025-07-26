@@ -1,24 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#80000000"
+    android:id="@+id/overlay_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CC000000"  <!-- 80% opaque black -->
+    android:padding="32dp"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/overlayText"
-        android:text="⏱ Focus mode is ON\nApp blocked"
-        android:textColor="#FFF"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!-- Card-like container for focus message -->
+    <LinearLayout
+        android:id="@+id/overlay_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:padding="24dp"
+        android:layout_margin="16dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="32dp"
+        android:clipToPadding="false"
+        android:clipToOutline="true"
+        android:orientation="vertical"
+        android:backgroundTintMode="src_in"
+        android:backgroundTint="#FFFFFF"
+        android:divider="#EEEEEE"
+        android:dividerPadding="8dp">
 
-    <Button
-        android:id="@+id/overlayButton"
-        android:text="Return"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="48dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/overlay_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⏱ Focus Mode Active"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/overlay_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This app is currently blocked. Please stay focused!"
+            android:textSize="16sp"
+            android:textColor="#555555"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/overlay_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Return"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
 </FrameLayout>
