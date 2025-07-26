@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.IBinder
+import com.main.R
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.Button
@@ -25,7 +26,8 @@ class OverlayService : Service() {
     val view = inflater.inflate(R.layout.overlay_layout, null) as FrameLayout
 
     // Wire up the “Return Home” button to dismiss the overlay
-    view.findViewById<Button>(R.id.overlayButton).setOnClickListener {
+    val btn = view.findViewById<Button>(R.id.overlay_button)
+    btn.setOnClickListener {
       stopSelf()
     }
 

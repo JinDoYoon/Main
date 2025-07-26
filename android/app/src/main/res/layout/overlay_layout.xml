@@ -3,29 +3,22 @@
     android:id="@+id/overlay_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CC000000"  <!-- 80% opaque black -->
+    android:background="#CC000000"
     android:padding="32dp"
     android:gravity="center">
 
-    <!-- Card-like container for focus message -->
     <LinearLayout
         android:id="@+id/overlay_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#FFFFFF"
+        android:background="@android:color/white"
         android:elevation="8dp"
         android:padding="24dp"
         android:layout_margin="16dp"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="32dp"
         android:clipToPadding="false"
-        android:clipToOutline="true"
-        android:orientation="vertical"
-        android:backgroundTintMode="src_in"
-        android:backgroundTint="#FFFFFF"
-        android:divider="#EEEEEE"
-        android:dividerPadding="8dp">
+        android:clipToOutline="true">
 
         <TextView
             android:id="@+id/overlay_title"
@@ -53,10 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Return"
-            android:background="?attr/selectableItemBackground"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="16dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="48dp"/>
+
     </LinearLayout>
 
 </FrameLayout>

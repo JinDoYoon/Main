@@ -70,7 +70,17 @@ export default function FocusPlannerScreen() {
                         !a.pkg.startsWith('com.android') && !a.pkg.startsWith('android.')
                     );
                     setApps(userApps);
-                    const allowed = new Set(['com.android.messaging', 'com.android.dialer', 'com.android.settings']);
+                    const allowed = new Set<string>([
+                        'com.android.messaging',
+                        'com.google.android.apps.messaging',
+                        'com.android.dialer',
+                        'com.google.android.dialer',
+                        'com.android.settings',
+                        'com.android.systemui',
+                        'com.android.launcher3',
+                        'com.google.android.apps.nexuslauncher',
+                        'com.main'
+                    ]);
                     setRestricted(new Set(userApps.filter(a => !allowed.has(a.pkg)).map(a => a.pkg)));
                 })
                 .catch((e: any) => console.warn('App detection failed', e));
@@ -131,6 +141,7 @@ export default function FocusPlannerScreen() {
             if (Platform.OS === 'android' && CurrentApp.getForegroundApp) {
                 try {
                     const pkg: string = await CurrentApp.getForegroundApp();
+                    // only block specified restricted apps
                     if (restricted.has(pkg)) {
                         OverlayService.startOverlay();
                     } else {
