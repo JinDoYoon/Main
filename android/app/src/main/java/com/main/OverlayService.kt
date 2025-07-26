@@ -22,7 +22,7 @@ class OverlayService : Service() {
         super.onCreate()
         Log.d("OverlayService", "onCreate: adding overlay view")
 
-        // Setup as foreground service (persistent notification)
+        // 1) Notification channel for a true foreground service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chan = NotificationChannel(
                 "focus_mode",
@@ -32,24 +32,31 @@ class OverlayService : Service() {
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(chan)
         }
+
+        // 2) Build a low‑importance ongoing notification
         val notif = NotificationCompat.Builder(this, "focus_mode")
             .setContentTitle("Focus Mode Active")
             .setContentText("Restricted apps are blocked.")
-            .setSmallIcon(R.drawable.ic_focus)
-            .setOngoing(true)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            // note: no need for setOngoing – startForeground makes it ongoing
             .build()
+
         startForeground(42, notif)
 
-        // Inflate overlay layout
+        // 3) Inflate your overlay layout
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         overlayView = LayoutInflater.from(this)
             .inflate(R.layout.overlay_layout, null)
 
-        // Button to dismiss overlay
-        overlayView?.findViewById<Button>(R.id.overlay_button)?.setOnClickListener {
-            stopOverlay()
-        }
+        // 4) Wire up the “Return” button to stop the service
+        overlayView
+          ?.findViewById<Button>(R.id.overlay_button)
+          ?.setOnClickListener {
+              stopForeground(true)
+              stopSelf()
+          }
 
+        // 5) Add the view on top of everything
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -73,11 +80,4 @@ class OverlayService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-    companion object {
-        fun stopOverlay() {
-            // Stop service to remove overlay
-            // This requires context; typically called via ReactMethod
-        }
-    }
 }
