@@ -5,6 +5,14 @@ import android.os.Build
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import android.provider.Settings
+import com.facebook.react.bridge.Promise
+
+@ReactMethod
+fun canDrawOverlays(promise: Promise) {
+  val allowed = Settings.canDrawOverlays(reactContext)
+  promise.resolve(allowed)
+}
 
 class BackgroundServiceModule(
   private val reactContext: ReactApplicationContext

@@ -36,6 +36,18 @@ const ALLOWED_PACKAGES = new Set<string>([
     'com.android.launcher3', 'com.google.android.apps.nexuslauncher',
 ]);
 
+async function ensureOverlayPermission() {
+  if (Platform.OS === 'android') {
+    const canDraw = await NativeModules.BackgroundService.canDrawOverlays(); 
+    // you’ll expose this native helper below
+    if (!canDraw) {
+      // send user to Settings → Display over other apps for *this* package
+      Linking.openSettings();
+      // you may want to show UI explaining why they must toggle "Allow display over other apps"
+    }
+  }
+}
+
 export default function FocusPlannerScreen() {
     const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
 
