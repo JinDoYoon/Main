@@ -12,6 +12,16 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.main.AppKillerPackage
 
 class MainApplication : Application(), ReactApplication {
+  override fun onCreate() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val chan = NotificationChannel(
+      "websocket-service",
+      "WebSocket Service",
+      NotificationManager.IMPORTANCE_LOW
+    )
+    (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+      .createNotificationChannel(chan)
+}
 
   override val reactNativeHost: ReactNativeHost =
       object : DefaultReactNativeHost(this) {
