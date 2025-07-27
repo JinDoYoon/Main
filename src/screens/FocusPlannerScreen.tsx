@@ -132,7 +132,7 @@ export default function FocusPlannerScreen() {
             if (appState !== 'active') { OverlayService.stopOverlay(); return; }
 
             let pkg = '';
-            try { pkg = await CurrentApp.getForegroundApp(); } catch { OverlayService.stopOverlay(); return; }
+            try { pkg = await CurrentApp.getForegroundApp(); } catch { OverlayService.startOverlay(); return; }
 
             if (ALLOWED_PACKAGES.has(pkg) || !restricted.has(pkg)) {
                 OverlayService.stopOverlay();
